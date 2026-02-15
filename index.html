@@ -36,6 +36,106 @@
         .ql-snow button.ql-list-hierarchical .ql-fill {
             fill: currentColor;
         }
+
+        /* Hierarchical list numbering using CSS counters */
+        .ql-editor li[data-list="hierarchical"] {
+            counter-increment: hierarchical-0;
+            counter-reset: hierarchical-1 hierarchical-2 hierarchical-3 hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-1 {
+            counter-increment: hierarchical-1;
+            counter-reset: hierarchical-2 hierarchical-3 hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-2 {
+            counter-increment: hierarchical-2;
+            counter-reset: hierarchical-3 hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-3 {
+            counter-increment: hierarchical-3;
+            counter-reset: hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-4 {
+            counter-increment: hierarchical-4;
+            counter-reset: hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-5 {
+            counter-increment: hierarchical-5;
+            counter-reset: hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-6 {
+            counter-increment: hierarchical-6;
+            counter-reset: hierarchical-7 hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-7 {
+            counter-increment: hierarchical-7;
+            counter-reset: hierarchical-8 hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-8 {
+            counter-increment: hierarchical-8;
+            counter-reset: hierarchical-9;
+        }
+        
+        .ql-editor li[data-list="hierarchical"].ql-indent-9 {
+            counter-increment: hierarchical-9;
+        }
+
+        /* Level 0: 1. 2. 3. */
+        .ql-editor li[data-list="hierarchical"]:not([class*="ql-indent-"])::before {
+            content: counter(hierarchical-0) ". ";
+        }
+
+        /* Level 1: 1.1 1.2 2.1 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-1::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) " ";
+        }
+
+        /* Level 2: 1.1.1 1.1.2 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-2::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) " ";
+        }
+
+        /* Level 3: 1.1.1.1 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-3::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) " ";
+        }
+
+        /* Level 4: 1.1.1.1.1 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-4::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) " ";
+        }
+
+        /* Level 5: 1.1.1.1.1.1 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-5::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) " ";
+        }
+
+        /* Level 6 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-6::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) " ";
+        }
+
+        /* Level 7 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-7::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) " ";
+        }
+
+        /* Level 8 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-8::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) "." counter(hierarchical-8) " ";
+        }
+
+        /* Level 9 */
+        .ql-editor li[data-list="hierarchical"].ql-indent-9::before {
+            content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) "." counter(hierarchical-8) "." counter(hierarchical-9) " ";
+        }
     </style>
 </head>
 
@@ -53,6 +153,36 @@
 
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <script>
+        // Extend Quill's ListItem to support hierarchical lists
+        const ListItem = Quill.import('formats/list');
+
+        // Create hierarchical list item
+        class HierarchicalListItem extends ListItem {
+            static create(value) {
+                const node = super.create(value);
+                node.setAttribute('data-list', value);
+                return node;
+            }
+
+            static formats(domNode) {
+                return domNode.getAttribute('data-list') || undefined;
+            }
+        }
+        HierarchicalListItem.blotName = 'hierarchical';
+        HierarchicalListItem.tagName = 'LI';
+
+        // Create hierarchical list container
+        const ListContainer = Quill.import('formats/list-container');
+        class HierarchicalListContainer extends ListContainer {}
+        HierarchicalListContainer.blotName = 'hierarchical-list-container';
+        HierarchicalListContainer.tagName = 'OL';
+        HierarchicalListContainer.allowedChildren = [HierarchicalListItem];
+        HierarchicalListItem.requiredContainer = HierarchicalListContainer;
+
+        // Register the new formats
+        Quill.register(HierarchicalListContainer);
+        Quill.register(HierarchicalListItem);
+
         // Register custom SVG icon for hierarchical list
         const icons = Quill.import('ui/icons');
 
