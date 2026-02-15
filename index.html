@@ -18,41 +18,6 @@
             height: 450px;
         }
 
-        /* Hide default list numbering */
-        .ql-editor ol {
-            list-style: none;
-            padding-left: 0;
-        }
-
-        /* Hierarchical numbering using data-list attribute */
-        .ql-editor li[data-list="ordered"]::before {
-            content: attr(data-list) " ";
-            font-weight: bold;
-            margin-right: 8px;
-            min-width: 20px;
-            display: inline-block;
-        }
-
-        .ql-editor li[data-list="bullet"]::before {
-            content: "•";
-            color: #000;
-            font-weight: bold;
-            margin-right: 8px;
-        }
-
-        /* Checkbox list items */
-        .ql-editor li[data-list="checked"]::before,
-        .ql-editor li[data-list="unchecked"]::before {
-            content: "";
-            display: inline-block;
-            width: 14px;
-            height: 14px;
-            border: 2px solid #000;
-            margin-right: 8px;
-            vertical-align: middle;
-            cursor: pointer;
-        }
-
         .ql-editor li[data-list="checked"]::before {
             background: #000;
         }
@@ -105,9 +70,6 @@
         </svg>`;
 
 
-        // Also add icon to the Quill object for later access
-        window.hierarchicalListIcon = icons['list-hierarchical'];
-
         // Import the existing ListItem blot
         const ListItem = Quill.import('formats/list');
 
@@ -119,10 +81,10 @@
 
         // Extend the ListItem blot for hierarchical numbering
         class HierarchicalListItem extends ListItem {
-            // Override static formats to read hierarchical value from data-list attribute
-            static formats(domNode) {
-                return domNode.getAttribute('data-list') || undefined;
-            }
+            // // Override static formats to read hierarchical value from data-list attribute
+            // static formats(domNode) {
+            //     return domNode.getAttribute('data-list') || undefined;
+            // }
 
             // Override format to compute hierarchical numbering when applying list format
             format(name, value) {
@@ -242,7 +204,7 @@
         HierarchicalListItem.blotName = 'list';
         HierarchicalListItem.tagName = 'LI';
 
-        Quill.register('formats/list', HierarchicalListItem, true);
+        // Quill.register('formats/list', HierarchicalListItem, true);
 
         // Initialize Quill editor
         const quill = new Quill('#editor', {
