@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quill 2.0.3 Demo</title>
+    <title>Quill 2.0.3 - Hierarchical List Demo</title>
     <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
     <style>
         body {
@@ -13,32 +13,272 @@
             padding: 20px;
         }
         #editor {
-            height: 300px;
+            height: 450px;
+        }
+        
+        /* Hide default list numbering */
+        .ql-editor ol {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        /* Hierarchical numbering using data-list attribute */
+        .ql-editor li[data-list="ordered"]::before {
+            content: attr(data-list) " ";
+            font-weight: bold;
+            margin-right: 8px;
+            min-width: 20px;
+            display: inline-block;
+        }
+        
+        .ql-editor li[data-list="bullet"]::before {
+            content: "•";
+            color: #000;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        
+        /* Checkbox list items */
+        .ql-editor li[data-list="checked"]::before,
+        .ql-editor li[data-list="unchecked"]::before {
+            content: "";
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #000;
+            margin-right: 8px;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+        
+        .ql-editor li[data-list="checked"]::before {
+            background: #000;
+        }
+        
+        /* Custom toolbar button for hierarchical list */
+        .ql-snow .ql-picker.ql-list-hierarchical,
+        .ql-snow .ql-picker-label.ql-list-hierarchical,
+        .ql-snow button.ql-list-hierarchical {
+            width: auto;
+        }
+        
+        .ql-snow button.ql-list-hierarchical .ql-stroke {
+            stroke: currentColor;
+        }
+        
+        .ql-snow button.ql-list-hierarchical .ql-fill {
+            fill: currentColor;
         }
     </style>
 </head>
 <body>
-    <h1>Quill 2.0.3 Demo</h1>
+    <h1>Quill 2.0.3 - Hierarchical List Demo</h1>
+    <p><strong>Usage:</strong></p>
+    <ul>
+        <li>Click the <strong>hierarchical list icon</strong> (☰ with numbers) to create a hierarchical list</li>
+        <li>Or click "1." button for standard ordered list, then use Tab to indent</li>
+        <li>Select a list item and press <strong>Tab</strong> to indent (nested level)</li>
+        <li>Press <strong>Shift+Tab</strong> to outdent</li>
+        <li>The numbering will update automatically: 1 → 1.1 → 1.1.1</li>
+    </ul>
     <div id="editor"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
     <script>
+        // Register custom SVG icon for hierarchical list
+        const icons = Quill.import('ui/icons');
+        icons['list-hierarchical'] = `<svg viewBox="0 0 18 18">
+            <line class="ql-stroke" x1="3" y1="4" x2="15" y2="4"></line>
+            <line class="ql-stroke" x1="3" y1="9" x2="15" y2="9"></line>
+            <line class="ql-stroke" x1="3" y1="14" x2="15" y2="14"></line>
+            <line class="ql-stroke" x1="7" y1="3" x2="7" y2="5"></line>
+            <line class="ql-stroke" x1="11" y1="3" x2="11" y2="5"></line>
+            <line class="ql-stroke" x1="7" y1="8" x2="7" y2="10"></line>
+            <line class="ql-stroke" x1="11" y1="8" x2="11" y2="10"></line>
+            <line class="ql-stroke" x1="7" y1="13" x2="7" y2="15"></line>
+            <line class="ql-stroke" x1="11" y1="13" x2="11" y2="15"></line>
+        </svg>`;
+
+        // Import the existing ListItem blot
+        const ListItem = Quill.import('formats/list');
+        
+        // Import Container for parent access
+        const Container = Quill.import('blots/container');
+        
+        // Import Parchment for Scope
+        const Parchment = Quill.import('parchment');
+        
+        // Extend the ListItem blot for hierarchical numbering
+        class HierarchicalListItem extends ListItem {
+            // Override static formats to read hierarchical value from data-list attribute
+            static formats(domNode) {
+                return domNode.getAttribute('data-list') || undefined;
+            }
+            
+            // Override format to compute hierarchical numbering when applying list format
+            format(name, value) {
+                if (name === 'list' && value === 'ordered') {
+                    // Compute hierarchical number based on position and indent
+                    const hierarchicalValue = this.computeHierarchicalNumber();
+                    this.domNode.setAttribute('data-list', hierarchicalValue);
+                } else if (name === 'list' && value) {
+                    this.domNode.setAttribute('data-list', value);
+                } else if (name === 'list' && !value) {
+                    this.domNode.removeAttribute('data-list');
+                } else if (name === 'indent') {
+                    // When indent changes, recompute all hierarchical numbers in the list
+                    super.format(name, value);
+                    this.recomputeHierarchicalNumbers();
+                } else {
+                    super.format(name, value);
+                }
+            }
+            
+            // Compute the hierarchical number for this list item
+            computeHierarchicalNumber() {
+                const indent = this.getIndent();
+                const parent = this.parent;
+                
+                if (!parent) {
+                    return '1';
+                }
+                
+                // Get all siblings at the same indent level
+                const siblings = this.getSiblingsAtLevel(indent);
+                const index = siblings.indexOf(this);
+                
+                if (indent === 0) {
+                    // Top level: 1, 2, 3...
+                    return String(index + 1);
+                }
+                
+                // Find parent at indent - 1
+                const parentItem = this.findParentAtLevel(indent - 1);
+                if (!parentItem) {
+                    return String(index + 1);
+                }
+                
+                // Get parent's hierarchical number
+                const parentNumber = parentItem.domNode.getAttribute('data-list') || '1';
+                
+                // Combine: parent.number + "." + (sibling index + 1)
+                return `${parentNumber}.${index + 1}`;
+            }
+            
+            // Get current indent level
+            getIndent() {
+                const classList = this.domNode.classList;
+                for (let i = 0; i <= 8; i++) {
+                    if (classList.contains(`ql-indent-${i}`)) {
+                        return i;
+                    }
+                }
+                return 0;
+            }
+            
+            // Get siblings at same indent level
+            getSiblingsAtLevel(targetIndent) {
+                const parent = this.parent;
+                if (!parent) return [];
+                
+                const siblings = [];
+                parent.children.forEach(child => {
+                    if (child instanceof HierarchicalListItem && child.getIndent() === targetIndent) {
+                        siblings.push(child);
+                    }
+                });
+                return siblings;
+            }
+            
+            // Find parent list item at target indent level
+            findParentAtLevel(targetIndent) {
+                let current = this.prev;
+                
+                while (current) {
+                    if (current instanceof HierarchicalListItem) {
+                        const currentIndent = current.getIndent();
+                        if (currentIndent === targetIndent) {
+                            return current;
+                        } else if (currentIndent < targetIndent) {
+                            // Went too far up, no parent at this level
+                            return null;
+                        }
+                    }
+                    current = current.prev;
+                }
+                
+                return null;
+            }
+            
+            // Recompute all hierarchical numbers in the list after indent change
+            recomputeHierarchicalNumbers() {
+                const parent = this.parent;
+                if (!parent) return;
+                
+                // Recompute all items in the list
+                parent.children.forEach(child => {
+                    if (child instanceof HierarchicalListItem) {
+                        const format = child.domNode.getAttribute('data-list');
+                        if (format && format.includes('.')) {
+                            // Only recompute hierarchical items
+                            const newNumber = child.computeHierarchicalNumber();
+                            child.domNode.setAttribute('data-list', newNumber);
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Set blot name to match original
+        HierarchicalListItem.blotName = 'list';
+        HierarchicalListItem.tagName = 'LI';
+        
+        // Register the extended blot
+        Quill.register('formats/list', HierarchicalListItem, true);
+        
+        // Initialize Quill editor
         const quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
-                toolbar: [
-                    [{ header: [1, 2, 3, false] }],
-                    ['bold', 'italic', 'underline', 'strike'],
-                    [{ color: [] }, { background: [] }],
-                    [{ list: 'ordered' }, { list: 'bullet' }],
-                    ['link', 'image'],
-                    ['clean']
-                ]
+                toolbar: {
+                    container: [
+                        [{ header: [1, 2, 3, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],
+                        [{ color: [] }, { background: [] }],
+                        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'hierarchical' }, { indent: '-1' }, { indent: '+1' }],
+                        ['link', 'image'],
+                        ['clean']
+                    ],
+                    handlers: {
+                        'list-hierarchical': function(value) {
+                            const range = this.quill.getSelection();
+                            if (range) {
+                                let currentFormat = {};
+                                if (range.length === 0) {
+                                    currentFormat = this.quill.getFormat(range.index);
+                                } else {
+                                    currentFormat = this.quill.getFormat(range.index, range.length);
+                                }
+                                
+                                if (currentFormat.list === 'ordered' && currentFormat['data-list']?.includes('.')) {
+                                    // Already hierarchical - remove list
+                                    this.quill.format('list', false);
+                                } else {
+                                    // Apply ordered list first, then indent to trigger hierarchical numbering
+                                    this.quill.format('list', 'ordered');
+                                    setTimeout(() => {
+                                        this.quill.format('indent', 1);
+                                    }, 10);
+                                }
+                            }
+                        }
+                    }
+                }
             }
         });
-
+        // Log contents on change for debugging
         quill.on('text-change', (delta, oldDelta, source) => {
-            console.log('Text change:', quill.getContents());
+            console.log('Contents:', quill.getContents());
         });
     </script>
 </body>
