@@ -22,12 +22,33 @@
       border-radius: 4px;
     }
     
-    .ql-editor ol li[data-list="decimal"] {
-      list-style-type: decimal;
+    .ql-editor ol.decimal-list {
+      counter-reset: decimal-list;
     }
     
-    .ql-editor ol[data-list="decimal"] {
-      list-style-type: decimal;
+    .ql-editor ol.decimal-list li::before {
+      counter-increment: decimal-list;
+      content: counter(decimal-list) ". ";
+    }
+    
+    .ql-editor ol.decimal-list li.ql-indent-1::before {
+      content: "1." counter(decimal-list) ". ";
+    }
+    
+    .ql-editor ol.decimal-list li.ql-indent-2::before {
+      content: "1.1." counter(decimal-list) ". ";
+    }
+    
+    .ql-editor ol.decimal-list li.ql-indent-3::before {
+      content: "1.1.1." counter(decimal-list) ". ";
+    }
+    
+    .ql-editor ol.decimal-list li.ql-indent-4::before {
+      content: "1.1.1.1." counter(decimal-list) ". ";
+    }
+    
+    .ql-editor ol.decimal-list li.ql-indent-5::before {
+      content: "1.1.1.1.1." counter(decimal-list) ". ";
     }
   </style>
 </head>
@@ -35,6 +56,7 @@
   <h1>Quill Editor Demo - Decimal List Plugin</h1>
   <div id="editor"></div>
   <button id="getContent">Get Content</button>
+  <button id="addDecimal">Add Decimal List</button>
   <div class="output">
     <h3>HTML Output:</h3>
     <pre id="output"></pre>
@@ -42,61 +64,33 @@
 
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
   <script>
-    const ListContainer = Quill.import('formats/list-container');
-    const ListItem = Quill.import('formats/list');
-    
-    class DecimalListItem extends ListItem {
-      static create(value) {
-        const node = super.create(value);
-        node.setAttribute('data-list', 'decimal');
-        return node;
-      }
-      
-      static formats(domNode) {
-        return domNode.getAttribute('data-list') || undefined;
-      }
-      
-      format(name, value) {
-        if (name === 'decimal' && value) {
-          this.domNode.setAttribute('data-list', 'decimal');
-        } else {
-          super.format(name, value);
-        }
-      }
-    }
-    
-    DecimalListItem.blotName = 'decimal';
-    DecimalListItem.tagName = 'LI';
-    
-    class DecimalListContainer extends ListContainer {
-      static create(value) {
-        const node = super.create(value);
-        node.setAttribute('data-list', 'decimal');
-        return node;
-      }
-      
-      static formats(domNode) {
-        return domNode.getAttribute('data-list') || undefined;
-      }
-    }
-    
-    DecimalListContainer.blotName = 'decimal';
-    DecimalListContainer.tagName = 'OL';
-    
-    Quill.register(DecimalListContainer);
-    Quill.register(DecimalListItem);
-    
-    const quill = new Quill('#editor', {
+    var quill = new Quill('#editor', {
       theme: 'snow',
       placeholder: 'Start typing...',
       modules: {
         toolbar: [
           [{ 'header': [1, 2, 3, false] }],
           ['bold', 'italic', 'underline', 'strike'],
-          [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'decimal' }],
+          [{ 'list': 'ordered'}, { 'list': 'bullet' }],
           ['link', 'image'],
           ['clean']
         ]
+      }
+    });
+    
+    document.getElementById('addDecimal').addEventListener('click', function() {
+      const range = quill.getSelection(true);
+      quill.formatLine(range.index, range.length, 'list', 'ordered');
+      
+      const line = quill.getLine(range.index);
+      if (line && line[0] && line[0].parent) {
+        let listContainer = line[0].parent;
+        while (listContainer && listContainer.tagName !== 'OL') {
+          listContainer = listContainer.parent;
+        }
+        if (listContainer) {
+          listContainer.classList.add('decimal-list');
+        }
       }
     });
     
