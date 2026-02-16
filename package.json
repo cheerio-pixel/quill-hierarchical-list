@@ -18,7 +18,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/quill-hierarchical-list"
+    "url": "https://github.com/cheerio-pixel/quill-hierarchical-list"
   },
   "peerDependencies": {
     "quill": "^2.0.0"
