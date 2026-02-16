@@ -1,19 +1,9 @@
 /**
- * Quill Hierarchical List Plugin
+ * Quill Hierarchical List Plugin (CommonJS)
  * Adds hierarchical ordered list numbering (1, 1.1, 1.1.1, etc.) to Quill editor
- * 
- * Usage:
- *   import QuillHierarchicalList from 'quill-hierarchical-list';
- *   Quill.register('modules/hierarchicalList', QuillHierarchicalList);
- *   
- *   const quill = new Quill('#editor', {
- *     modules: {
- *       hierarchicalList: true
- *     }
- *   });
  */
 
-import Quill from 'quill';
+const Quill = require('quill');
 
 const Module = Quill.import('core/module');
 
@@ -65,5 +55,5 @@ class HierarchicalList extends Module {
   }
 }
 
-export { HierarchicalList };
-export default HierarchicalList;
+module.exports = HierarchicalList;
+module.exports.default = HierarchicalList;

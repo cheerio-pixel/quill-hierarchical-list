@@ -9,32 +9,70 @@ A Quill.js plugin that adds hierarchical ordered list numbering (1, 1.1, 1.1.1, 
 - Works with Quill's built-in Tab/Shift+Tab indentation
 - Number alignment on the left edge
 - Custom toolbar icon
+- Can be used as a Quill module with registry (recommended)
+- Also supports legacy script include
 
 ## Installation
 
-### Via CDN
+### Via CDN (ESM)
 
 ```html
 <!-- Include Quill CSS -->
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
 
 <!-- Include Quill JS -->
-<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js" type="module"></script>
 
 <!-- Include Hierarchical List CSS -->
 <link href="quill-hierarchical-list.css" rel="stylesheet">
 
-<!-- Include Hierarchical List JS -->
-<script src="quill-hierarchical-list.js"></script>
+<!-- Register and use the module -->
+<script type="module">
+  import HierarchicalList from './quill-hierarchical-list.js';
+  Quill.register('modules/hierarchicalList', HierarchicalList);
+</script>
 ```
 
+### Via npm
+
+```bash
+npm install quill-hierarchical-list
+```
 
 ## Usage
 
+### ESM (Recommended)
+
 ```javascript
+import HierarchicalList from 'quill-hierarchical-list';
+
+Quill.register('modules/hierarchicalList', HierarchicalList);
+
 const quill = new Quill('#editor', {
   theme: 'snow',
   modules: {
+    hierarchicalList: true,
+    toolbar: {
+      container: [
+        [{ list: 'ordered' }, { list: 'bullet' }, { list: 'hierarchical' }],
+        ['indent', 'outdent']
+      ]
+    }
+  }
+});
+```
+
+### CommonJS
+
+```javascript
+const HierarchicalList = require('quill-hierarchical-list');
+
+Quill.register('modules/hierarchicalList', HierarchicalList);
+
+const quill = new Quill('#editor', {
+  theme: 'snow',
+  modules: {
+    hierarchicalList: true,
     toolbar: {
       container: [
         [{ list: 'ordered' }, { list: 'bullet' }, { list: 'hierarchical' }],

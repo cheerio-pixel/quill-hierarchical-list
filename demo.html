@@ -34,12 +34,15 @@
     <div id="editor"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    <script src="quill-hierarchical-list.js"></script>
-    <script>
-        // Initialize Quill editor
+    <script type="module">
+        import HierarchicalList from './quill-hierarchical-list.js';
+        
+        Quill.register('modules/hierarchicalList', HierarchicalList);
+
         const quill = new Quill('#editor', {
             theme: 'snow',
             modules: {
+                hierarchicalList: true,
                 toolbar: {
                     container: [
                         [{header: [1, 2, 3, false]}],
