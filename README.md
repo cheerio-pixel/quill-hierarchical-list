@@ -39,6 +39,12 @@ A Quill.js plugin that adds hierarchical ordered list numbering (1, 1.1, 1.1.1, 
 npm install quill-hierarchical-list
 ```
 
+### Via GitHub
+
+```bash
+npm install github:cheerio-pixel/quill-hierarchical-list
+```
+
 ## Usage
 
 ### ESM (Recommended)
