@@ -3,21 +3,18 @@
  * Adds hierarchical ordered list numbering (1, 1.1, 1.1.1, etc.) to Quill editor
  */
 
-const Quill = require('quill');
-
-const Module = Quill.import('core/module');
-
-class HierarchicalList extends Module {
+class HierarchicalList {
   static moduleName = 'hierarchicalList';
 
   constructor(quill, options = {}) {
-    super(quill, options);
+    this.quill = quill;
+    this.options = options;
     this.extendListItem();
     this.registerIcon();
   }
 
   extendListItem() {
-    const ListItem = Quill.import('formats/list');
+    const ListItem = this.quill.constructor.import('formats/list');
 
     const originalFormats = ListItem.formats;
     ListItem.formats = function (domNode) {
@@ -39,7 +36,7 @@ class HierarchicalList extends Module {
   }
 
   registerIcon() {
-    const icons = Quill.import('ui/icons');
+    const icons = this.quill.constructor.import('ui/icons');
     icons.list = icons.list || {};
     icons.list.hierarchical = `<svg viewBox="0 0 18 18">
       <line class="ql-stroke" x1="3" y1="4" x2="15" y2="4"></line>

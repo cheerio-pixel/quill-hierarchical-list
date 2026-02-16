@@ -2,8 +2,9 @@
   "name": "quill-hierarchical-list",
   "version": "1.0.0",
   "description": "Hierarchical ordered list plugin for Quill.js editor",
-  "main": "./quill-hierarchical-list.js",
+  "main": "./quill-hierarchical-list.cjs.js",
   "module": "./quill-hierarchical-list.js",
+  "browser": "./quill-hierarchical-list.umd.js",
   "type": "module",
   "exports": {
     "import": "./quill-hierarchical-list.js",
