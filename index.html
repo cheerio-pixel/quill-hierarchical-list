@@ -70,14 +70,14 @@
         }
         .ql-editor li[data-list="hierarchical"]:not(.ql-indent-1):not(.ql-indent-2):not(.ql-indent-3):not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) ". \A";
-            margin-left: -1.5em;
+            margin-left: -2em;
         }
         
         /* Level 1 - 1.1 1.2 */
         .ql-editor li[data-list="hierarchical"].ql-indent-1:not(.ql-indent-2):not(.ql-indent-3):not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-1;
             counter-reset: hierarchical-2 hierarchical-3 hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 1em;
+            margin-left: 0.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-1:not(.ql-indent-2):not(.ql-indent-3):not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) " \A";
@@ -88,7 +88,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-2:not(.ql-indent-3):not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-2;
             counter-reset: hierarchical-3 hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 2em;
+            margin-left: 1.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-2:not(.ql-indent-3):not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) " \A";
@@ -99,7 +99,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-3:not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-3;
             counter-reset: hierarchical-4 hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 3em;
+            margin-left: 2.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-3:not(.ql-indent-4):not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) " \A";
@@ -110,7 +110,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-4:not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-4;
             counter-reset: hierarchical-5 hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 4em;
+            margin-left: 3.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-4:not(.ql-indent-5):not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) " \A";
@@ -121,7 +121,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-5:not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-5;
             counter-reset: hierarchical-6 hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 5em;
+            margin-left: 4.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-5:not(.ql-indent-6):not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) " \A";
@@ -132,7 +132,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-6:not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-6;
             counter-reset: hierarchical-7 hierarchical-8 hierarchical-9;
-            margin-left: 6em;
+            margin-left: 5.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-6:not(.ql-indent-7):not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) " \A";
@@ -143,7 +143,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-7:not(.ql-indent-8):not(.ql-indent-9) {
             counter-increment: hierarchical-7;
             counter-reset: hierarchical-8 hierarchical-9;
-            margin-left: 7em;
+            margin-left: 6.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-7:not(.ql-indent-8):not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) " \A";
@@ -154,7 +154,7 @@
         .ql-editor li[data-list="hierarchical"].ql-indent-8:not(.ql-indent-9) {
             counter-increment: hierarchical-8;
             counter-reset: hierarchical-9;
-            margin-left: 8em;
+            margin-left: 7.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-8:not(.ql-indent-9) > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) "." counter(hierarchical-8) " \A";
@@ -164,7 +164,7 @@
         /* Level 9 */
         .ql-editor li[data-list="hierarchical"].ql-indent-9 {
             counter-increment: hierarchical-9;
-            margin-left: 9em;
+            margin-left: 8.5em;
         }
         .ql-editor li[data-list="hierarchical"].ql-indent-9 > .ql-ui:before {
             content: counter(hierarchical-0) "." counter(hierarchical-1) "." counter(hierarchical-2) "." counter(hierarchical-3) "." counter(hierarchical-4) "." counter(hierarchical-5) "." counter(hierarchical-6) "." counter(hierarchical-7) "." counter(hierarchical-8) "." counter(hierarchical-9) " \A";
