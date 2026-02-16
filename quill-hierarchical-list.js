@@ -13,6 +13,23 @@
  *   });
  */
 
+import Quill from 'quill';
+
+// Pre-register icon when module is loaded
+const icons = Quill.import('ui/icons');
+icons.list = icons.list || {};
+icons.list.hierarchical = `<svg viewBox="0 0 18 18">
+  <line class="ql-stroke" x1="3" y1="4" x2="15" y2="4"></line>
+  <line class="ql-stroke" x1="3" y1="9" x2="15" y2="9"></line>
+  <line class="ql-stroke" x1="3" y1="14" x2="15" y2="14"></line>
+  <line class="ql-stroke" x1="7" y1="3" x2="7" y2="5"></line>
+  <line class="ql-stroke" x1="11" y1="3" x2="11" y2="5"></line>
+  <line class="ql-stroke" x1="7" y1="8" x2="7" y2="10"></line>
+  <line class="ql-stroke" x1="11" y1="8" x2="11" y2="10"></line>
+  <line class="ql-stroke" x1="7" y1="13" x2="7" y2="15"></line>
+  <line class="ql-stroke" x1="11" y1="13" x2="11" y2="15"></line>
+</svg>`;
+
 class HierarchicalList {
   static moduleName = 'hierarchicalList';
 
@@ -20,7 +37,6 @@ class HierarchicalList {
     this.quill = quill;
     this.options = options;
     this.extendListItem();
-    this.registerIcon();
   }
 
   extendListItem() {
@@ -43,22 +59,6 @@ class HierarchicalList {
         originalFormat.call(this, name, value);
       }
     };
-  }
-
-  registerIcon() {
-    const icons = this.quill.constructor.import('ui/icons');
-    icons.list = icons.list || {};
-    icons.list.hierarchical = `<svg viewBox="0 0 18 18">
-      <line class="ql-stroke" x1="3" y1="4" x2="15" y2="4"></line>
-      <line class="ql-stroke" x1="3" y1="9" x2="15" y2="9"></line>
-      <line class="ql-stroke" x1="3" y1="14" x2="15" y2="14"></line>
-      <line class="ql-stroke" x1="7" y1="3" x2="7" y2="5"></line>
-      <line class="ql-stroke" x1="11" y1="3" x2="11" y2="5"></line>
-      <line class="ql-stroke" x1="7" y1="8" x2="7" y2="10"></line>
-      <line class="ql-stroke" x1="11" y1="8" x2="11" y2="10"></line>
-      <line class="ql-stroke" x1="7" y1="13" x2="7" y2="15"></line>
-      <line class="ql-stroke" x1="11" y1="13" x2="11" y2="15"></line>
-    </svg>`;
   }
 }
 
