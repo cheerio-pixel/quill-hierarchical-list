@@ -1,0 +1,26 @@
+{
+  "name": "quill-hierarchical-list",
+  "version": "1.0.0",
+  "description": "Hierarchical ordered list plugin for Quill.js editor",
+  "main": "quill-hierarchical-list.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "quill",
+    "quilljs",
+    "editor",
+    "hierarchical",
+    "list",
+    "nested"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/quill-hierarchical-list"
+  },
+  "peerDependencies": {
+    "quill": "^2.0.0"
+  }
+}
